@@ -51,6 +51,8 @@ for iii = stiffRange
             clim(cmax);
             if i == 1 
                 xlabel('Activation (ms)')
+            else
+                set(gca,'xticklabels',[])
             end
             if ii == 4
                 ylabel('Deactivation (ms)')
@@ -91,25 +93,28 @@ for iii = stiffRange
 
 end
 
-cbh = colorbar(s(2),'northoutside');
+cbh = colorbar(s(2),'northoutside','TickLength',0.02);
 s(2).Position(3) = s(1).Position(3);
 %cbth = title(cbh,'RMSE (l_0)');
-cbh.Position([1,2,3]) = [0.375,0.965,0.3351-0.1];
-cbh.Label.String = 'RMSE (l_0)';
-cbh.Label.Position = [cmax(2)+diff(cmax)*0.21,-0.4];
+cbh.Position([1,2,3]) = [0.362,0.965,0.3351-0.1];
+cbh.AxisLocation = 'in';
+cbth = title(cbh,'Root-mean-squared position error (l_0)');
+cbth.Position = [68.4141   10 0]
+%cbh.Label.String = 'Root-mean squared position error (l_0)';
+%cbh.Label.Position = [cmax(2)+diff(cmax)*0.21,-0.4];
 %cbh.Label.FontWeight = 'bold';
 cbh.Label.FontSize = 9;
 
 % inset showing young --> old
-axIn = axes(gcf,'Position',[0.4211    0.4829    0.1200    0.0600],'box','on','xtick','','ytick','');
+axIn = axes(gcf,'Position',[0.4211    0.495    0.1200    0.0600],'box','on','xtick','','ytick','');
 xlim(axIn,[0 1]);
 ylim(axIn,[0 1]);
 
 text(axIn,0.05,1,'Younger','Fontsize',8,'HorizontalAlignment','left','VerticalAlignment','top','FontWeight','bold')
 text(axIn,0.95,0,'Older','Fontsize',8,'HorizontalAlignment','right','VerticalAlignment','bottom','FontWeight','bold')
-annotation('arrow',[0.471,0.502],[0.5236,0.5],'headsize',8)
+annotation('arrow',[0.471,0.502],[0.5236,0.5]+0.012,'headsize',8)
 
-newXright = s(2).Position(1)-0.07;
+newXright = s(2).Position(1)-0.075;
 
 % adjust positions
 
@@ -118,10 +123,10 @@ for i = 2:2:8
     set(s(i),'YAxisLocation','right')
 end
 
-yadjust = -0.025;
+yadjust = -0.035;
 
 for i = 3:8
-    s(i).Position(2) = s(i).Position(2) - yadjust*(1+floor((i-3)/2)-3*(i>4));
+    s(i).Position(2) = s(i).Position(2) - yadjust*(1+floor((i-3)/2)-2.5*(i>4));
 end
 
 %annotation(gcf,'line',[0.15 0.9],0.505*[1 1])
