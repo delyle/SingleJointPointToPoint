@@ -1,11 +1,12 @@
-% Plot from parameter sweep (currently only for VelActFmaxStiffSweep)
+% Reproduces Figure 3 in the paper
+
 blankSlate
 % load data
 mainDir = 'TrackO1ParamSweep/VelActFmaxStiffSweep/Data_45to135_flat_T0p4_warmStart';
 fList = dir([mainDir,'/Data_*.mat']);
 A = load([mainDir,'/',fList(1).name]);
 saveFig = true;
-saveFigDir = 'Paper'; % if empty, will save to mainDir
+saveFigDir = 'Figures'; % if empty, will save to mainDir
 
 fprintf('Parameter range:\n----------------------\n')
 disp(['c1: ',sprintf('\t%.2f',A.c1_range)])
@@ -54,7 +55,10 @@ end
 
 close all
 figure('position',[506   104   508   677],'color','w')
-colors = linspecer(3);
+colors = ...
+   [0.3467    0.5360    0.6907
+    0.9153    0.2816    0.2878
+    0.4416    0.7490    0.4322];
 relAntColor = 0.40;
 LW = 1;
 labelFS = 8;
@@ -141,7 +145,4 @@ for i = 1:4
     text(sp(i),0,1.03,['(',txt(i),')'],'units','normalized','FontSize',labelFS+2,'verticalalignment','bottom','HorizontalAlignment','left')
 end
 
-exportgraphics(gcf, 'D:\Delyle\SimpleAnatagonistParameterSweeps\Paper\TimeSeries.pdf', 'ContentType', 'vector')
-
-%print(gcf,'D:\Delyle\SimpleAnatagonistParameterSweeps\Paper\TimeSeries.png','-dpng','-r150')
-
+exportgraphics(gcf, 'Figures/Figure3.pdf', 'ContentType', 'vector')
