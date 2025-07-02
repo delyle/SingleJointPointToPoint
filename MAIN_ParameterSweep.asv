@@ -14,7 +14,7 @@ iterNameFun = @(Psim) strrep(sprintf('c1_%.0fe-3_alp_%.2f_%.2fms_Vmax%.2f_Fmax%.
 
 %% common parameters.
 
-% define baseline parameters
+% define basline parameters
 baselineFmax = 1300; % peak tension in N
 baselineVmax = 1.6; % peak strain rate in lengths / s
 baselineMomentArm = 0.04; % in m
@@ -35,10 +35,10 @@ Fmax_range = [0.5,0.8,1,1.5]*baselineFmax;
 scale_d2 = true; % if true, maximum eccentric gain is scaled by Fmax so that the maximum eccentric force matches the baseline case
 useBaselineSol = false; % if true, uses the baseline solution as a guess for the parameter sweep.
 recomputeSolutions = false; % if true, will recompute the solution even if one is already located in the folder
-showFigs = false; % whether to show figures after every solution is computed. Setting to true increases runtime.
+showFigs = false;
 
-Psim.T = 0.4; % final time, in s
-Psim.dt = 5e-3; % time discretisation, in s
+Psim.T = 0.4; % final time
+Psim.dt = 5e-3;
 W.act = 0;
 W.exc = 0;
 W.pow = 0;
@@ -164,13 +164,11 @@ for i = 1:N
 end
 close(wbh)
 
-htocOverall = toc(hticOverall) %#ok<NOPTS>
+htocOverall = toc(hticOverall)
 
 %% Load data
 regUsed = false(size(actMat));
-recomputeReg = false; % NOTE: if set to true, this will find cases that 
-% failed to produce a solution, and attempt to recompute using a
-% regularisation term. No regularisation was used in the study
+recomputeReg = false; % NOTE: if 
 for i = 1:N
     Psim.alp = [actMat(i),deactMat(i)];
     Psim.Vmax = VmaxMat(i);

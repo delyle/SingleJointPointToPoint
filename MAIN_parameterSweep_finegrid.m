@@ -17,15 +17,17 @@ iterNameFun = @(Psim) strrep(sprintf('c1_%.0fe-3_alp_%.2f_%.2fms_Vmax%.2f_Fmax%.
 
 %% common parameters.
 hticOverall = tic;
-baselineFmax = 1300;
-baselineVmax = 1.6;
-baselineMomentArm = 0.04;
-baselineRestingTheta = pi/2;
-baselineThetaRange = [45,135]*pi/180;
-baseline_c = [0.05,5,1];
-baseline_d = [4, 1.4, 30.24];
-baseline_act = 94.5e-3;
-baseline_deact = 65e-3;
+
+% define baseline parameters
+baselineFmax = 1300; % peak tension in N
+baselineVmax = 1.6; % peak strain rate in lengths / s
+baselineMomentArm = 0.04; % in m
+baselineRestingTheta = pi/2; % position of the arm (from maximum flexion) where muscle length is at resting; in radians
+baselineThetaRange = [45,135]*pi/180; % movement excursion in radians; see figure 1 for definition of rotational excursion
+baseline_c = [0.05,5,1]; % parameters for stiffness model
+baseline_d = [4, 1.4, 30.24]; % parameters for force-length characteristics
+baseline_act = 94.5e-3; % activation time constant in s
+baseline_deact = 65e-3; % deactivation time constant in s
 
 Vmax_range = baselineVmax;
 act_range = baseline_act;
@@ -36,7 +38,7 @@ Fmax_range = baselineFmax;
 scale_d2 = true; % if true, maximum eccentric gain is scaled by Fmax so that the maximum eccentric force matches the baseline case
 useBaselineSol = true; % if true, uses the baseline solution as a guess for the parameter sweep.
 recomputeSolutions = false; % if true, will recompute the solution even if one is already located in the folder
-showFigs = false; % whether to show the figure output of each case
+showFigs = false; % whether to show the figure output of each case. Increases runtime.
 
 Psim.T = 0.4; % final time
 Psim.dt = 5e-3; 
@@ -225,5 +227,5 @@ end
 
 J_rmse_l0 = sqrt(Psim.dt/Psim.T*J_sse)/Psim.lO/2; % get the root-mean-squared error for one muscle (it will be the same for the other).
 
-%% Save data
+% Save data
 save(adir(dataDir))
