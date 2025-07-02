@@ -36,13 +36,13 @@ Fmax_range = baselineFmax;
 scale_d2 = true; % if true, maximum eccentric gain is scaled by Fmax so that the maximum eccentric force matches the baseline case
 useBaselineSol = true; % if true, uses the baseline solution as a guess for the parameter sweep.
 recomputeSolutions = false; % if true, will recompute the solution even if one is already located in the folder
-showFigs = false;
+showFigs = false; % whether to show the figure output of each case
 
 Psim.T = 0.4; % final time
-Psim.dt = 5e-3;
-W.act = 0;
-W.exc = 0;
-W.pow = 0;
+Psim.dt = 5e-3; 
+W.act = 0; % weight penalising activations
+W.exc = 0; % weight penalising excitations
+W.pow = 0; % weight penalising work
 W.endTrack = 0.01; % a weight adding a penalty for error at end or tracking period
 
 
@@ -225,106 +225,5 @@ end
 
 J_rmse_l0 = sqrt(Psim.dt/Psim.T*J_sse)/Psim.lO/2; % get the root-mean-squared error for one muscle (it will be the same for the other).
 
-%J_rmse_l0 = Psim.T*sqrt(Psim.dt/Psim.T*J_sse)/2/diff(Start_ldl([1,3])); % get the root-mean-squared error for one muscle (it will be the same for the other).
-
-
 %% Save data
-save(adir(dataDir))
-
-%% plot range of surfaces
-
-close all
-figRange = 1:length(c1_range);
-figCounter = 1;
-plotTime = false;
-flipDeact = -1; % -1 to flip, 1 to keep the same. 
-
-    irange = length(Vmax_range):-1:1;
-    iirange = length(Fmax_range):-1:1;
-
-for iii = figRange
-    if plotTime
-    J=TimeToTarget;
-    figure('color','w','position',[209 150 1343 840])
-    rangeJ = [min(J(:)),max(J(:))];
-    floor1em3 = @(x) floor(x*100)/100;
-    contourLevels = floor1em3(rangeJ(1)):1e-2:floor1em3(rangeJ(2)+1e-3);
-    cmax = contourLevels([1,end])
-    j =0;
-    for i = irange
-        for ii = iirange
-            j = j+1;
-            s(j) = subplot(max(iirange),max(irange),j);
-            contourf(act_range*1e3,flipDeact*deact_range*1e3,J(:,:,i,ii,iii),contourLevels)
-            caxis(cmax)
-            xlabel('Activation (ms)')
-            ylabel('Deactivation (ms)')
-            title(sprintf('Vmax=%.1f, Fmax=%.0f, c_1=%.2f',Vmax_range(i),Fmax_range(ii),c1_range(iii)));
-            if j == 1
-                text(0,1.4,'Time to Target (s)','units','normalized','fontweight','bold')
-            end
-            if i == 1 && ii == 1
-                colorbar('eastoutside')
-                s(j).Position(3) = s(1).Position(3);
-            end
-            xlim(act_range([1,end])*1e3)
-            ylim(sort(flipDeact*deact_range([1,end])*1e3))
-        end
-    end
-
-    [optJ,iOptJ] = min(J(:,:,:,:,iii));
-    [i,j,k,ii] = ind2sub(size(actMat),iOptJ);
-
-    %subplot(s(ii))
-    %hold on
-    %plot(act_range(j),c1_range(i),'yp','markersize',5,'markerfacecolor','y')
-
-    exportgraphics(figure(figCounter),adir([dataDir,strrep(sprintf('c1%.2f_contours_TimeToTarget',c1_range(iii)),'.','p'),'.pdf']), 'ContentType', 'vector');
-    figCounter = figCounter +1;
-    end
-    J=J_rmse_l0;
-    figure('color','w','position',[209 100 1343 840])
-    rangeJ = [min(J(:)),max(J(:))];
-    floor1em3 = @(x) floor(x*1000)/1000;
-    contourLevels = floor1em3(rangeJ(1)):2.5e-3:floor1em3(rangeJ(2)+1e-3);
-    cmax = contourLevels([1,end])
-    j = 0;
-    for i = irange
-        for ii = iirange
-            j = j+1;
-            s(j) = subplot(max(iirange),max(irange),j);
-            contourf(act_range*1e3,flipDeact*deact_range*1e3,J(:,:,i,ii,iii),contourLevels)
-            caxis(cmax);
-            xlabel('Activation (ms)')
-            ylabel('Deactivation (ms)')
-            
-            regUsedHere = regUsed(:,:,i,ii,iii);
-            actUsedHere = actMat(:,:,i,ii,iii)*1e3;
-            deactUsedHere = deactMat(:,:,i,ii,iii)*1e3;
-            hold on
-            plot(actUsedHere(regUsedHere(:)),flipDeact*deactUsedHere(regUsedHere(:)),'.','color',0.75*[1 1 1])
-            title(sprintf('Vmax=%.1f, Fmax=%.0f, c_1=%.2f',Vmax_range(i),Fmax_range(ii),c1_range(iii)));
-            if j == 1
-                text(0,1.4,'RMS Error (l_0)','units','normalized','fontweight','bold')
-            end
-            if i == 1 && ii == 1
-                colorbar('eastoutside')
-                s(j).Position(3) = s(1).Position(3);
-            end
-            xlim(act_range([1,end])*1e3)
-            ylim(sort(flipDeact*deact_range([1,end])*1e3))
-        end
-    end
-
-    [optJ,iOptJ] = min(J(:,:,:,:,iii));
-    [i,j,k,ii] = ind2sub(size(actMat),iOptJ);
-
-    % subplot(s(k))
-    % hold on
-    % plot(act_range(j),deact_range(i),'yp','markersize',5,'markerfacecolor','y')
-
-    exportgraphics(figure(figCounter),adir([dataDir,strrep(sprintf('c1%.2f_contours',c1_range(iii)),'.','p'),'.pdf']), 'ContentType', 'vector');
-    figCounter = figCounter +1;
-
-end
 save(adir(dataDir))
