@@ -1,4 +1,4 @@
-# SingleJointPointToPoint
+# Single Joint Point-to-Point Simulations
 
 This repository provides code and data for the paper "How muscle aging affects rapid goal-directed movement: mechanistic insights from a simple model".
 
