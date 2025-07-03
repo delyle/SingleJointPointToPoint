@@ -54,7 +54,7 @@ Generating the figures requires accessing the data in `TrackO1ParameterSweep/Vel
 
 Several of these scripts make use of `linspecer`, which is bundled in the repository:
 
->  Jonathan C. Lansey (2025). Beautiful and distinguishable line colors + colormap ([https://www.mathworks.com/matlabcentral/fileexchange/42673-beautiful-and-distinguishable-line-colors-colormap]()), MATLAB Central File Exchange. Retrieved July 3, 2025.
+>  Jonathan C. Lansey (2025). Beautiful and distinguishable line colors + colormap ([https://www.mathworks.com/matlabcentral/fileexchange/42673-beautiful-and-distinguishable-line-colors-colormap]()), MATLAB Central File Exchange.
 
 Note: you may get a warning such as "Warning: Could not find appropriate function on path loading function handle". This can be ignored; it is simply due to an anonymous function that was inadvertently saved to the .mat files during the parameter sweep
 
