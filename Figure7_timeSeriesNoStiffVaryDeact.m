@@ -1,11 +1,12 @@
-% Plot from parameter sweep (currently only for VelActFmaxStiffSweep)
+% plotsFigure 7 from the manuscript
+
 blankSlate
 % load data
-mainDir = 'TrackO1ParamSweep/VelActFmaxStiffSweep/Data_45to135_flat_T0p4_warmStart';
+mainDir = 'TrackO1ParamSweep/VelActFmaxStiffSweep/Data_45to135_flat_T0p4_warmStart'; %'TrackO1ParamSweep\DeactSweepSmallerMovement\Data_85to95_flat_T0p2_warmStart';%
 fList = dir([mainDir,'/Data_*.mat']);
 A = load([mainDir,'/',fList(1).name]);
 saveFig = true;
-saveFigDir = 'Paper'; % if empty, will save to mainDir
+saveFigDir = 'Figures'; % if empty, will save to mainDir
 
 fprintf('Parameter range:\n----------------------\n')
 disp(['c1: ',sprintf('\t%.2f',A.c1_range)])
@@ -32,17 +33,14 @@ for i = 1:length(A.deact_range)
     solDir = A.adir(iterName);
     fileName = [solDir,'/sol_',iterName];
     B(i) = load(fileName);
-
-
 end
 %% Plot the activation profile for each case
 %close all
-figure('color','w','position',[680   374   560   504])
-firstPlot = 'velocity'; % force or velocity
+figure('color','w','position',[680   219   560   659])
 
-tlh = tiledlayout(4,1,'tileSpacing','compact');
+tlh = tiledlayout(5,1,'tileSpacing','compact');
 
-for i = 1:4
+for i = 1:5
 ax(i) = nexttile(i);
 hold(ax(i),'on')
 end
@@ -62,59 +60,45 @@ N = length(B);
 colors = linspecer(N,'sequential');
 
 FS = 8;
-AgonistFirstPlot = 1;
-    switch lower(firstPlot)
-        case 'force'
-            firstPlotYlabel = 'Force   [F_{max}]';
-        case 'jointtorque'
-            firstPlotYlabel = 'Joint Torque [rF_{max}]';
-            FS = 8;
-            AgonistFirstPlot = 2;
-        case 'velocity'
-            firstPlotYlabel = 'Velocity  [v_{max}]';
-        otherwise
-            error('firstPlot should be force, jointtorque or velocity')
-    end
+
 
 for i = 1:N
-    switch lower(firstPlot)
-        case 'force'
-            firstPlotY = B(i).F_tActive2/Psim.Fmax;
-        case 'jointtorque'
-            firstPlotY = (B(i).F_tActive2-B(i).F_tActive1)/Psim.Fmax;
-        case 'velocity'
-            firstPlotY = -B(i).x_t(5,:)/A.Psim.lO/Psim.Vmax;
-    end
-    plot(ax(1),B(i).(tField),firstPlotY,'-','color',colors(i,:));
+    plot(ax(1),B(i).(tField),B(i).x_t(4,:)/B(i).Psim.lO,'-','color',colors(i,:));
 
-    plot(ax(2),B(i).(tField),B(i).x_t(6,:),'-','color',colors(i,:));
+    plot(ax(2),B(i).(tField),B(i).x_t(5,:)/B(i).Psim.lO/B(i).Psim.Vmax,'-','color',colors(i,:));
 
-    plot(ax(3),B(i).(tField),B(i).x_t(3,:),'-','color',colors(i,:));
+    plot(ax(3),B(i).(tField),B(i).x_t(6,:),'-','color',colors(i,:));
+    plot(ax(3),B(i).(tField),-B(i).x_t(3,:),'-','color',colors(i,:));
 
-    plot(ax(4),B(i).(tField),min([B(i).x_t(3,:);B(i).x_t(6,:)]),'-','color',colors(i,:));
+    plot(ax(4),B(i).(tField),B(i).F_tActive2/B(i).Psim.Fmax,'-','color',colors(i,:));
+    plot(ax(4),B(i).(tField),-B(i).F_tActive1/B(i).Psim.Fmax,'-','color',colors(i,:));
+
+    plot(ax(5),B(i).(tField),min([B(i).F_tActive1;B(i).F_tActive2])/B(i).Psim.Fmax,'-','color',colors(i,:));
+    
+
 end
 
 
-title(ax(AgonistFirstPlot),'Agonist')
-title(ax(3),'Antagonist')
-title(ax(4),'Coactivation')
-ax(3).YLim = ax(2).YLim;
-ax(4).YLim = ax(2).YLim;
+[ax(1:4).XTickLabel] = deal('');
 
-[ax(1:3).XTickLabel] = deal('');
+ABC = 'abcde';
 
-ABC = 'abcd';
-
-for i = 1:4
+for i = 1:5
     text(ax(i),0.03,0.85,['(',ABC(i),')'],'units','normalized','FontSize',10)
 end
 
-lgh = legend(ax(1),legendTxt);
-lgh.Layout.Tile = 'east';
+lgh = legend(ax(1),legendTxt,'location','northeast','numcolumns',2);
 title(lgh,sprintf('Deact. time (ms)'));
+lgh.Box = 'off';
+lgh.Position = [0.6520    0.7973    0.2339    0.1206];
 
-ylabel(ax(1),firstPlotYlabel,'Fontsize',FS)
-ylabel(tlh,'Activation')
+ylabel(ax(1),'Strain','Fontsize',FS)
+ylabel(ax(2),'Strain rate','Fontsize',FS)
+ylabel(ax(3),'Activation','FontSize',FS)
+ylabel(ax(4),'Muscle Force (F_{max})','FontSize',FS)
+ylabel(ax(5),'Cocontraction (F_{max})','FontSize',FS)
+
+
 xlabel(tlh,'Time [s]')
 sweepName = regexprep(fList.name,'Data_|.mat','');
 sweepNameCorr = strrep(sweepName,'_',' ');
@@ -127,6 +111,6 @@ if saveFig
     if isempty(saveFigDir)
         saveFigDir = mainDir;
     end
-    saveName = ['Data_',sweepName,'_',caseName,'_Coactivation_',firstPlot,'.pdf'];
-    exportgraphics(gcf,[saveFigDir,'/',saveName])
+    saveName = ['Data_',sweepName,'_',caseName,'_States_NoStiff.pdf'];
+    exportgraphics(gcf,[saveFigDir,'/Figure7.pdf'])
 end

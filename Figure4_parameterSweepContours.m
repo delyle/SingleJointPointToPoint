@@ -1,21 +1,12 @@
-blankSlate
-% In this script we sweep through various parameters in a simple reaching task.
+% This script reproduces Figure 4 in the manuscript
 
-% to start, we look at velocity and activation
+blankSlate % clear the workspace
 
-% Let's look at the following case:
-% A simple arm based around Murtola, with motion at the elbow
-% movement in 0.4, from 45 -> 135 deg
-
-mDir = 'D:\Delyle\SimpleAnatagonistParameterSweeps\TrackO1ParamSweep\VelActFmaxStiffSweep';
+mDir = 'TrackO1ParamSweep/VelActFmaxStiffSweep/';
 dataDir = 'Data_45to135_flat_T0p4_warmStart';
-addpath(mDir)
 adir = @(x) [mDir,'/',dataDir,'/',x];
-mkdir(adir(''))
 printFigs = @(x,n)  exportgraphics(figure(n),sprintf('%s_%i.pdf',x,n), 'ContentType', 'vector');
 iterNameFun = @(Psim) strrep(sprintf('c1_%.2f_alp_%.2f_%.2fms_Vmax%.2f_Fmax%.0f',Psim.c(1),Psim.alp*1e3,Psim.Vmax,Psim.Fmax),'.','p');
-
-
 
 %% load data
 load(adir(dataDir))
@@ -28,16 +19,15 @@ plotTime = false;
 
 irange = length(Vmax_range)+[0, -3];
 iirange = length(Fmax_range)+[0, -3];
+
+J=J_rmse_l0;
+figure('color','w','position',[ 209   100   776   840])
 rangeJ = [min(J(:)),max(J(:))];
+floor1em3 = @(x) floor(x*1000)/1000;
+contourLevels = floor1em3(rangeJ(1)):2.5e-3:floor1em3(rangeJ(2)+1e-3);
+cmax = contourLevels([1,end]);
 
-    J=J_rmse_l0;
-    figure('color','w','position',[ 209   100   776   840])
-    rangeJ = [min(J(:)),max(J(:))];
-    floor1em3 = @(x) floor(x*1000)/1000;
-    contourLevels = floor1em3(rangeJ(1)):2.5e-3:floor1em3(rangeJ(2)+1e-3);
-    cmax = contourLevels([1,end])
-
-        flipDeact = -1; % -1 to flip, 1 to keep the same. 
+flipDeact = -1; % For plotting deactivation. -1 to flip, 1 to keep the same.
 
 RomNum = ["i","ii","iii","iv","v","vi","vii","viii"];
 j = 0;
@@ -87,10 +77,6 @@ for iii = stiffRange
     [optJ,iOptJ] = min(J(:,:,:,:,iii));
     [iopt,jopt,kopt,iiopt] = ind2sub(size(actMat),iOptJ);
 
-    % subplot(s(k))
-    % hold on
-    % plot(act_range(j),deact_range(i),'yp','markersize',5,'markerfacecolor','y')
-
 end
 
 cbh = colorbar(s(2),'northoutside','TickLength',0.02);
@@ -99,10 +85,7 @@ s(2).Position(3) = s(1).Position(3);
 cbh.Position([1,2,3]) = [0.362,0.965,0.3351-0.1];
 cbh.AxisLocation = 'in';
 cbth = title(cbh,'Root-mean-squared position error (l_0)');
-cbth.Position = [68.4141   10 0]
-%cbh.Label.String = 'Root-mean squared position error (l_0)';
-%cbh.Label.Position = [cmax(2)+diff(cmax)*0.21,-0.4];
-%cbh.Label.FontWeight = 'bold';
+cbth.Position = [68.4141   10 0];
 cbh.Label.FontSize = 9;
 
 % inset showing young --> old
@@ -117,7 +100,6 @@ annotation('arrow',[0.471,0.502],[0.5236,0.5]+0.012,'headsize',8)
 newXright = s(2).Position(1)-0.075;
 
 % adjust positions
-
 for i = 2:2:8
     s(i).Position(1) = newXright;
     set(s(i),'YAxisLocation','right')
@@ -129,10 +111,6 @@ for i = 3:8
     s(i).Position(2) = s(i).Position(2) - yadjust*(1+floor((i-3)/2)-2.5*(i>4));
 end
 
-%annotation(gcf,'line',[0.15 0.9],0.505*[1 1])
-%annotation(gcf,'textbox',[0.05,0.95,0.05,0.05],'linestyle','--','string','(A)')
+%% save the figure
 
-figure(gcf)
-%%
-
-exportgraphics(figure(1),[dataDir,strrep(sprintf('c1%.2f_contours',c1_range(iii)),'.','p'),'.pdf'], 'ContentType', 'vector');
+exportgraphics(figure(1),'Figures/Figure4.pdf', 'ContentType', 'vector');

@@ -1,4 +1,4 @@
-% compare minimum time and RMSE
+% This script produces the Figures S1-S3
 
 % Plot from parameter sweep (currently only for VelActFmaxStiffSweep)
 blankSlate
@@ -6,7 +6,7 @@ blankSlate
 mainDir = 'TrackO1ParamSweep\VelActFmaxStiffSweep\Data_45to135_flat_T0p4_warmStart\';%'TrackO1ParamSweep/VelActFmaxStiffSweep/Data_45to135_flat_T0p4_ageOnly';%
 fList = dir([mainDir,'/Data_*.mat']);
 [A,S] = loadTrackO1Solutions(mainDir);
-saveFig = true;
+saveFig = false;
 saveFigDir = []; % if empty, will save to mainDir
 
 fprintf('Parameter range:\n----------------------\n')
@@ -47,13 +47,13 @@ if recomputeRMSE
 J = sqrt(A(1).Psim.dt/A(1).Psim.T*J)/A(1).Psim.lO/2; % get the root-mean-squared error for one muscle (it will be the same for the other).
 end
 
-%% compute time
+%% compute time metrics
 
 TimeToTarget = NaN(size(A));
 TimeToStable = NaN(size(A));
 HomingInErr = NaN(size(A));
 meanCoactBallistic = NaN(size(A));
-showfigs = false;
+showfigs = false; % for debugging; if enabled, will show figures for every instance, and user must press a key to continue
 
 for i = 1:length(A)
     t = A(i).t_track;
@@ -75,9 +75,6 @@ for i = 1:length(A)
     Ballistic_RMSE(i) = sqrt(Ballistic_SSE(i)/n_b);
     
     end
-    
-    
-    
 
     StableCriterion = abs(v_t) <= 0.01 & abs(prox) <= 0.01;
     iSC = find(StableCriterion,1);
@@ -107,7 +104,7 @@ for i = 1:length(A)
     
 end
 
-%% Fraction of JRMSE due to ballistic error
+%% Figure S1: Fraction of JRMSE due to ballistic error 
 
 Jrel = sqrt(Ballistic_SSE(:)./Total_SSE(:));
 close all
@@ -118,9 +115,9 @@ xlim([0.999,1.0001])
 prctile(Jrel,10)
 xlabel('$J_{RMSE,rel}$','interpreter','latex')
 ylabel(sprintf('Fraction of %i trials',numel(Jrel)),'interpreter','latex')
-exportgraphics(gcf,'Paper\HistogramJrel.pdf')
+exportgraphics(gcf,'Figures/FigureS1.pdf')
 
-%% compare metrics
+%% Figure S2: compares Time to Target and Time to Stable point against RMSE
 
 close all
 
@@ -136,57 +133,15 @@ nexttile
 plot(J(:),TimeToStable,'.k')
 ylabel('Time to Stable Point (s)')
 xlabel('RMSE (l_0)')
-exportgraphics(gcf,'Paper/RMSEvsTime.pdf')
-
-figure;
-subplot(2,1,1)
-plot(J(:),HomingInErr,'s')
-xlabel('RMSE (l_0)')
-ylabel('Homing in error (l_0)')
-subplot(2,1,2)
-plot(TimeToTarget,HomingInErr,'s')
-xlabel('Time to Target (s)')
-ylabel('Homing in error (l_0)')
-
-fitlm(J(:),TimeToTarget)
-
-Outliers = HomingInErr > 5e-3;
-
-fitlm(J(~Outliers),HomingInErr(~Outliers))
-
-fitlm(TimeToTarget(~Outliers),HomingInErr(~Outliers))
-
-%% Put in 3D space
-figure
-plot3(TimeToTarget,HomingInErr,J(:),'s')
-hold on
-plot3(TimeToTarget(Outliers),HomingInErr(Outliers),J(Outliers),'rs')
-xlabel('Time to Target (s)')
-ylabel('Homing in Err (l_0)')
-zlabel('RMSE (l_0)')
-
-%% correlate J to coactivation
-
-lm = fitlm(meanCoact(:),J(:))
-
-figure
-plot(meanCoact(:),J(:),'s')
+exportgraphics(gcf,'Figures/FigureS2.pdf')
 
 
-%% Correlate J to time to stable point
-lm = fitlm(TimeToStable,meanCoact(:))
-
-figure
-plot(TimeToStable,meanCoactBallistic(:),'s')
-xlabel('Time to stable point (s)')
-ylabel('Mean Coactivation')
-
-%% Plot Coactivation as a predictor of performance and time to stable point / time to Target
+%% Figure S3: Plot Coactivation as a predictor of performance and time to stable point / time to Target
 close all
 figure('color','w','Position',[680    100   560   660])
 tlo = tiledlayout(3,1,'TileSpacing','compact');
 
-xplot = meanCoactBallistic(:);
+xplot = meanCoact(:);
 
 nexttile
 plot(xplot(:),TimeToTarget,'.k')
@@ -203,4 +158,4 @@ plot(xplot(:),J(:),'.k')
 ylabel('RMSE (l_0)')
 xlabel('Mean Coactivation')
 
-exportgraphics(gcf,'Paper/CoactVsTimeJ.pdf')
+exportgraphics(gcf,'Figures/FigureS3.pdf')

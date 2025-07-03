@@ -1,11 +1,12 @@
-% Plot from parameter sweep (currently only for VelActFmaxStiffSweep)
+% Plots Figure 6 from the manuscript
+
 blankSlate
 % load data
 mainDir = 'TrackO1ParamSweep\VelActFmaxStiffSweep\Data_45to135_flat_T0p4_warmStart\';
 fList = dir([mainDir,'/Data_*.mat']);
 A = load([mainDir,'/',fList(1).name]);
 saveFig = true;
-saveFigDir = 'Paper'; % if empty, will save to mainDir
+saveFigDir = 'Figures'; % if empty, will save to mainDir
 
 fprintf('Parameter range:\n----------------------\n')
 disp(['c1: ',sprintf('\t%.2f',A.c1_range)])
@@ -94,7 +95,7 @@ ax(1).XLim = ax(2).XLim;
 
 lgh = legend(ax(1),legendTxt,'location','eastoutside');
 lgh.Layout.Tile = 'east';
-title(lgh,sprintf('Deact. rate (ms)'));
+title(lgh,sprintf('Deact. time (ms)'));
 lgh.Position(2) = 0.86;
 
 ylfs = 12;
@@ -128,6 +129,5 @@ if saveFig
     if isempty(saveFigDir)
         saveFigDir = mainDir;
     end
-    saveName = ['Data_',sweepName,'_',caseName,'_PassiveForce.pdf'];
-    exportgraphics(gcf,[saveFigDir,'/',saveName])
+    exportgraphics(gcf,[saveFigDir,'/Figure6.pdf'])
 end
