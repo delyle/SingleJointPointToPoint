@@ -10,6 +10,10 @@ There are four categories of script
 
 Data used in the paper are included. The results from the large parameter sweep varying all 5 interrogated muscle parameters, as well as for a finer parameter sweep across changes in deactivation rate and stiffness, are contained in the directory "TrackO1ParameterSweep/VelActFmaxStiffSweep"
 
+If you use this code, please cite us using the following citation:
+
+> Delyle T. Polet and Chris T. Richards. 2015. The contribution of muscle parameters to ballistic performance during a goal-directed task. bioRxiv
+
 ## Dependencies
 
 This code is written in MATLAB and runs on MATLAB 2024b- it may not work properly on earlier versions of MATLAB. The statistics and machine learning toolbox is required for the linear regression script.
@@ -42,9 +46,17 @@ This script performs linear regression on the large parameter sweep data. It is 
 
 This script requires the Statistics and Machine Learning toolbox.
 
+Note: you may get a warning such as "Warning: Could not find appropriate function on path loading function handle". This can be ignored; it is simply due to an anonymous function that was inadvertently saved to the .mat files during the parameter sweep
+
 # Figure-generating scripts
 
 Various scripts are provided which generate the figures seen in the paper. Each begins with the filename `FigureX`, with X being the corresponding figure number in the manuscript. These are provided with the goal of being maximally transparent about the data we present.
+
+Several of these scripts make use of `linspecer`, which is bundled in the repository:
+
+>  Jonathan C. Lansey (2025). Beautiful and distinguishable line colors + colormap ([https://www.mathworks.com/matlabcentral/fileexchange/42673-beautiful-and-distinguishable-line-colors-colormap]()), MATLAB Central File Exchange. Retrieved July 3, 2025.
+
+Note: you may get a warning such as "Warning: Could not find appropriate function on path loading function handle". This can be ignored; it is simply due to an anonymous function that was inadvertently saved to the .mat files during the parameter sweep
 
 # Further questions
 
