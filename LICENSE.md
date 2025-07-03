@@ -15,7 +15,7 @@ copies or substantial portions of the Software.
 
 Any publications using the software will cite the authors using the following citation:
 
-Delyle T. Polet and Christopher T. Richards. 2015. The contribution of muscle parameters to ballistic performance during a goal-directed task. bioRxiv
+Delyle T. Polet and Christopher T. Richards. 2015. How muscle aging affects rapid goal-directed movement: mechanistic insights from a simple model. bioRxiv
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
