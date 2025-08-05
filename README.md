@@ -18,8 +18,7 @@ If you use this code, please cite us using the following citation:
 
 This code is written in MATLAB and runs on MATLAB 2024b- it may not work properly on earlier versions of MATLAB. The statistics and machine learning toolbox is required for the linear regression script.
 
-The optimisation procedure requires [CasADi](https://web.casadi.org/).
-
+The optimisation procedure requires [CasADi](https://web.casadi.org/). Note that the code as written also takes advantage of the MA57 linear solver, which does not come pre-shipped with CasADi / IPOPT. To obtain MA57 and link it to CasADi, follow the directions [here](https://github.com/casadi/casadi/wiki/Obtaining-HSL). Otherwise, you may set the `linSolver` variable to `'mumps'`.
 ## Running the code
 
 With the MATLAB current folder set to the upper directory of the repository, run `addPaths`.
