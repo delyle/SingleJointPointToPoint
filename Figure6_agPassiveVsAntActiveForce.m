@@ -98,7 +98,7 @@ lgh.Layout.Tile = 'east';
 title(lgh,sprintf('Deact. time (ms)'));
 lgh.Position(2) = 0.86;
 
-ylfs = 12;
+ylfs = 9;
 ylabel(ax(1),'Force [N]','FontSize',ylfs)
 ylh2 = ylabel(ax(2),'Force [N]','FontSize',ylfs);
 ylh3 = ylabel(ax(3),'Torque [Nm]','FontSize',ylfs);
@@ -111,8 +111,8 @@ caseNameCorr = strrep(caseName,'_',' ');
 titleTxt = [caseNameCorr,' ',sweepNameCorr];
 %title(tlh,titleTxt,'fontsize',10)
 
-ABC = 'ABC';
-for i = 1:3
+ABC = 'ABCD';
+for i = 1:4
     text(ax(i),0,1.06,['(',ABC(i),')'],'units','normalized','FontSize',10,'VerticalAlignment','bottom','HorizontalAlignment','left')
 end
 

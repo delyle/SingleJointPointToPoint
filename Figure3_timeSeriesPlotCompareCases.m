@@ -112,7 +112,7 @@ xlabel('Time (s)')
 
 subplot(sp(1))
 box on
-legend(sp(1).Children(end-3:end-1),{'"oldest"','baseline','"youngest"'})
+legend(sp(1).Children(end-3:end-1),{'"Oldest"','Baseline','"Youngest"'})
 text(0.025,B(1).l2_track(1),'Target','verticalalignment','bottom','fontsize',labelFS)
 ylim( [0.28 0.3601]);
 

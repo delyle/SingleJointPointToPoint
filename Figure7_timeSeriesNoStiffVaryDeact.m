@@ -81,10 +81,12 @@ end
 
 [ax(1:4).XTickLabel] = deal('');
 
-ABC = 'abcde';
+ABC = 'ABCDE';
 
+ypos = 0.85+[0 0.07 0 0 0];
+xpos = 0.03+[0 0.020 0 0 0];
 for i = 1:5
-    text(ax(i),0.03,0.85,['(',ABC(i),')'],'units','normalized','FontSize',10)
+    text(ax(i),xpos(i),ypos(i),['(',ABC(i),')'],'units','normalized','FontSize',10)
 end
 
 lgh = legend(ax(1),legendTxt,'location','northeast','numcolumns',2);
@@ -92,11 +94,11 @@ title(lgh,sprintf('Deact. time (ms)'));
 lgh.Box = 'off';
 lgh.Position = [0.6520    0.7973    0.2339    0.1206];
 
-ylabel(ax(1),'Strain','Fontsize',FS)
-ylabel(ax(2),'Strain rate','Fontsize',FS)
+ylabel(ax(1),'Muscle length [l_0]','Fontsize',FS)
+ylabel(ax(2),'Strain rate [v_{max}]','Fontsize',FS)
 ylabel(ax(3),'Activation','FontSize',FS)
-ylabel(ax(4),'Muscle Force (F_{max})','FontSize',FS)
-ylabel(ax(5),'Cocontraction (F_{max})','FontSize',FS)
+ylabel(ax(4),'Muscle Force [F_{max}]','FontSize',FS)
+ylabel(ax(5),'Cocontraction [F_{max}]','FontSize',FS)
 
 
 xlabel(tlh,'Time [s]')
