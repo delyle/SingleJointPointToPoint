@@ -1,4 +1,4 @@
-# SingleJointPointToPoint
+# Single Joint Point-to-Point Simulations
 
 This repository provides code and data for the paper "How muscle aging affects rapid goal-directed movement: mechanistic insights from a simple model".
 
@@ -18,8 +18,7 @@ If you use this code, please cite us using the following citation:
 
 This code is written in MATLAB and runs on MATLAB 2024b- it may not work properly on earlier versions of MATLAB. The statistics and machine learning toolbox is required for the linear regression script.
 
-The optimisation procedure requires [CasADi](https://web.casadi.org/).
-
+The optimisation procedure requires [CasADi](https://web.casadi.org/). Note that the code as written also takes advantage of the MA57 linear solver, which does not come pre-shipped with CasADi / IPOPT. To obtain MA57 and link it to CasADi, follow the directions [here](https://github.com/casadi/casadi/wiki/Obtaining-HSL). Otherwise, you may set the `linSolver` variable to `'mumps'`.
 ## Running the code
 
 With the MATLAB current folder set to the upper directory of the repository, run `addPaths`.
@@ -54,7 +53,7 @@ Generating the figures requires accessing the data in `TrackO1ParameterSweep/Vel
 
 Several of these scripts make use of `linspecer`, which is bundled in the repository:
 
->  Jonathan C. Lansey (2025). Beautiful and distinguishable line colors + colormap ([https://www.mathworks.com/matlabcentral/fileexchange/42673-beautiful-and-distinguishable-line-colors-colormap]()), MATLAB Central File Exchange. Retrieved July 3, 2025.
+>  Jonathan C. Lansey (2025). Beautiful and distinguishable line colors + colormap ([https://www.mathworks.com/matlabcentral/fileexchange/42673-beautiful-and-distinguishable-line-colors-colormap]()), MATLAB Central File Exchange.
 
 Note: you may get a warning such as "Warning: Could not find appropriate function on path loading function handle". This can be ignored; it is simply due to an anonymous function that was inadvertently saved to the .mat files during the parameter sweep
 
