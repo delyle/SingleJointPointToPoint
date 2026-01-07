@@ -260,7 +260,7 @@ absPower2 = absSmooth(Power2,smoothPower);
 % Objective: regularize controls
 J_reg = W.act*sumsqr([a1(:);a2(:)]) +...
     W.exc*sumsqr(U(:)) +...
-    W.pow*(sum(absPower1(:)+absPower2(:)));
+    W.pow*(sum(absPower1(:)+absPower2(:)))*dt;
 J_trackErr = sumsqr(l1-l1_track)+sumsqr(l2-l2_track);
 J_trackErrEnd = W.endTrack*((l1(end)-l1_track(end))^2+(l2(end)-l2_track(end))^2);
 J = J_reg+J_trackErr+J_trackErrEnd;
@@ -316,6 +316,7 @@ plotMuscleAntagonistResults(t_track,x_tplot,u_inp,[[NaN;NaN],[l1_track;l2_track]
 if W.pow > 0
     figure;
     subplot(2,1,1)
+    t = (0:length(x_t)-1)*dt;
     plot(t,[abs(Psim.Vmax*sol.value(Power1));Psim.Vmax*sol.value(absPower1)],'-')
     legend('abs Power','smooth abs Power')
     ylabel('Power (W)')
